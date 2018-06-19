@@ -88,6 +88,46 @@ const mkdirIfNeeded = (path, logger) => {
 
 const REQUIRED_PROPS = ['botUrl']
 
+const validateBotfile = botfile => {
+  if ('disableFileLogs' in botfile || _.get(botfile, 'log.file')) {
+    console.log(
+      `
+      You're using the old logs configuration format.
+      Since v11 botpress has stopped storing logs in files and
+      has moved them to the database.
+
+      Please update your botfile.
+
+      Old configuration format:
+        /*
+          By default logs are enabled and available in dataDir
+        */
+        disableFileLogs: false,
+        log: {
+          file: 'bot.log',
+          maxSize: 1e6 // 1mb
+        }
+
+      New format:
+        /*
+          By default logs are enabled and stored in the DB
+        */
+        logs: {
+          enabled: true,
+          maxSize: 1e6 // 1mb
+        }
+      `
+    )
+    throw new Error('Outdated botfile format')
+  }
+
+  for (const prop of REQUIRED_PROPS) {
+    if (!(prop in botfile)) {
+      throw new Error(`Missing required botpress setting: ${prop}`)
+    }
+  }
+}
+
 class botpress {
   constructor({ botfile }) {
     this.version = getBotpressVersion()
@@ -106,12 +146,7 @@ class botpress {
      */
     // eslint-disable-next-line no-eval
     this.botfile = eval('require')(botfile)
-
-    for (const prop of REQUIRED_PROPS) {
-      if (!(prop in this.botfile)) {
-        throw new Error(`Missing required botpress setting: ${prop}`)
-      }
-    }
+    validateBotfile(this.botfile)
 
     this.stats = stats(this.botfile)
 
