@@ -66,7 +66,7 @@ module.exports = {
    */
   logs: {
     enabled: true,
-    maxSize: 1e6 // 1mb
+    keepDays: 30
   },
 
   /*
@@ -88,15 +88,6 @@ module.exports = {
     Botpress collects some anonymous usage statistics to help us put our efforts at the right place
    */
   optOutStats: false,
-
-  /*
-    Where the notifications are stored.
-    TODO: These should be stored in the database
-   */
-  notification: {
-    file: 'notifications.json',
-    maxLength: 50
-  },
 
   /*
     By default ghost content management is only activated in production

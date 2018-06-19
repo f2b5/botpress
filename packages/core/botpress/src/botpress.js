@@ -110,11 +110,11 @@ const validateBotfile = botfile => {
 
       New format:
         /*
-          By default logs are enabled and stored in the DB
+          By default logs are enabled and stored in the DB for 30 days
         */
         logs: {
           enabled: true,
-          maxSize: 1e6 // 1mb
+          keepDays: 30
         }
       `
     )
@@ -183,7 +183,7 @@ class botpress {
     const dbLocation = path.join(dataLocation, 'db.sqlite')
     const version = packageJson.version
 
-    const logger = createLogger(dataLocation, botfile.log)
+    const logger = createLogger(dataLocation, botfile.logs)
     mkdirIfNeeded(dataLocation, logger)
     mkdirIfNeeded(configLocation, logger)
 

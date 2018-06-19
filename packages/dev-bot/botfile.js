@@ -51,11 +51,11 @@ module.exports = {
   mediaDir: './generated/media',
 
   /*
-    By default logs are enabled and stored in the DB
+    By default logs are enabled and stored in the DB for 30 days
    */
   logs: {
     enabled: true,
-    maxSize: 1e6 // 1mb
+    keepDays: 30
   },
 
   /*
